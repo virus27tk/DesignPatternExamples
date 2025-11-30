@@ -1,0 +1,30 @@
+name: Commit Rating Gate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  check-commit-rating:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run commit rating check
+        env:
+          GITHUB_BASE_REF: ${{ github.base_ref }}
+        run: |
+          mkdir -p .github/scripts
+          python .github/scripts/commit_rating_gate.py
