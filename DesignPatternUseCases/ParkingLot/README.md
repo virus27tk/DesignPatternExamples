@@ -22,7 +22,7 @@ This parking lot management system demonstrates the implementation of multiple d
 
 ## 📊 UML Diagram
 
-![UML Class Diagram](IMG_1867.png)
+![UML Class Diagram](IMG_1867.jpg)
 
 The UML class diagram above illustrates the relationships between all components in the parking lot management system, showing how the various design patterns are implemented and how the classes interact with each other.
 
