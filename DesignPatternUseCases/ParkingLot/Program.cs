@@ -1,5 +1,7 @@
 ﻿
+using ParkingLot.Enums;
 using ParkingLot.Models;
+using ParkingLot.Services;
 
 class Program
 {
@@ -8,7 +10,9 @@ class Program
 		Console.WriteLine("=== Parking Lot System ===");
 		Console.Write("Enter parking lot capacity: ");
 		int capacity = int.Parse(Console.ReadLine() ?? "0");
-		var lot = new ParkingLot.Models.ParkingLot(capacity);
+		var lot = new ParkingLotModel(capacity);
+
+		var parkingLotService = new ParkingLotService(lot, new TicketService());
 
 		while (true)
 		{
@@ -22,19 +26,23 @@ class Program
 			switch (input)
 			{
 				case "1":
-					if (lot.ParkVehicle())
-						Console.WriteLine("Vehicle parked successfully.");
+					var vehicleTypeString = Console.ReadLine();
+					var vehicleType = Enum.Parse<VehicleType>(vehicleTypeString, true);
+
+					var vehicle = new Vehicle(2909, vehicleType);
+					var ticket = parkingLotService.ParkVehicle(vehicle);
+					if (ticket is not null)
+						Console.WriteLine($"Vehicle parked successfully. Ticket Number : {ticket.TicketId}");
 					else
 						Console.WriteLine("Parking lot is full!");
 					break;
 				case "2":
-					if (lot.RemoveVehicle())
-						Console.WriteLine("Vehicle removed successfully.");
-					else
-						Console.WriteLine("Parking lot is empty!");
+				    var ticketIdToExit = Console.ReadLine();
+					var exitTicket = parkingLotService.ExitVehicle(int.Parse(ticketIdToExit));
+					Console.WriteLine($"Vehicle Exited successfully. Ticket Number : {exitTicket.Fee}");
 					break;
 				case "3":
-					Console.WriteLine($"Occupied: {lot.Occupied} / {lot.Capacity}");
+					parkingLotService.ShowStatus();
 					break;
 				case "4":
 					Console.WriteLine("Exiting...");
